@@ -37,6 +37,7 @@ class BlogPost(models.Model):
     )
     views_count = models.PositiveIntegerField(
         default=0,
+        editable=False,
         verbose_name="Количество просмотров",
         help_text="Количество просмотров статьи",
     )
@@ -53,3 +54,22 @@ class BlogPost(models.Model):
         verbose_name = "Блоговая статья"
         verbose_name_plural = "Блоговые статьи"
         ordering = ["-created_at"]
+
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    category = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, related_name='versions', on_delete=models.CASCADE)
+    version_number = models.CharField(max_length=100)
+    version_name = models.CharField(max_length=255)
+    is_current = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.version_name} ({self.version_number})"
