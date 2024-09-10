@@ -1,0 +1,17 @@
+<h1>{{ product.name }}</h1>
+<img src="{{ product.image.url }}" alt="{{ product.name }}">
+<p>{{ product.description }}</p>
+<p>Цена: {{ product.price }} руб.</p>
+{% if product.versions.filter(is_current=True).exists %}
+    <div>
+        <strong>Текущая версия:</strong>
+        {% with product.versions.get(is_current=True) as version %}
+            {{ version.version_name }} ({{ version.version_number }})
+        {% endwith %}
+    </div>
+{% else %}
+    <div>Нет текущей версии</div>
+{% endif %}
+<a href="{% url 'product_update' product.pk %}">Редактировать</a>
+<a href="{% url 'product_delete' product.pk %}">Удалить</a>
+<a href="{% url 'product_list' %}">Назад к списку продуктов</a>

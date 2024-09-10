@@ -1,0 +1,19 @@
+<h1>Список продуктов</h1>
+<ul>
+    {% for product in products %}
+        <li>
+            <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+            - {{ product.price }} руб.
+            {% if product_versions|default_if_none:''|dict_key:product.pk %}
+                {% with product_versions|dict_key:product.pk as version %}
+                    <div>
+                        <strong>Текущая версия:</strong> {{ version.version_name }} ({{ version.version_number }})
+                    </div>
+                {% endwith %}
+            {% else %}
+                <div>Нет текущей версии</div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'product_create' %}">Создать новый продукт</a>

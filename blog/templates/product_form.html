@@ -1,0 +1,7 @@
+<h1>{% if object %}Редактировать продукт{% else %}Создать новый продукт{% endif %}</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+<a href="{% url 'product_list' %}">Назад к списку продуктов</a>
