@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Product, BlogPost
-from catalog.forms import ProductForm
+from django.utils.text import slugify
+from .models import BlogPost, Product
+from .forms import ProductForm
 
 # BlogPost Views
 
