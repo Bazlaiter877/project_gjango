@@ -99,3 +99,21 @@ class BlogPost(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='versions', verbose_name="Продукт")
+    version_number = models.CharField(max_length=10, verbose_name="Номер версии")
+    version_name = models.CharField(max_length=255, verbose_name="Название версии")
+    is_current = models.BooleanField(default=False, verbose_name="Текущая версия")
+
+    def save(self, *args, **kwargs):
+        if self.is_current:
+            Version.objects.filter(product=self.product, is_current=True).update(is_current=False)
+        super(Version, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.version_name} ({self.version_number})"
+
+    class Meta:
+        verbose_name = "Версия"
+        verbose_name_plural = "Версии"

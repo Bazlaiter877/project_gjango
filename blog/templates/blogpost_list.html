@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список статей</title>
+</head>
+<body>
+    <h1>Список статей</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'blog:post_detail' slug=post.slug %}">{{ post.title }}</a>
+                <p>{{ post.created_at|date:"d M Y" }}</p>
+            </li>
+        {% empty %}
+            <li>Нет опубликованных статей.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'blog:post_create' %}">Создать новую статью</a>
+</body>
+</html>
