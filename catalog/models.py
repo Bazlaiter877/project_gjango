@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 
+
 class Category(models.Model):
     name = models.CharField(
         max_length=255,
@@ -23,6 +24,7 @@ class Category(models.Model):
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
         ordering = ["name"]
+
 
 class Product(models.Model):
     name = models.CharField(
@@ -75,6 +77,7 @@ class Product(models.Model):
         verbose_name_plural = "Продукты"
         ordering = ["created_at"]
 
+
 class BlogPost(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.CharField(max_length=255, unique=True, verbose_name="Slug")
@@ -99,6 +102,7 @@ class BlogPost(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
 
 class Version(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='versions', verbose_name="Продукт")

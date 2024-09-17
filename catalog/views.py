@@ -1,32 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView, TemplateView
-from django import forms
-from .models import Product
-
-# Запрещенные слова для проверки
-FORBIDDEN_WORDS = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
-
-# Валидация для полей формы продукта
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'description', 'price', 'image', 'category']
-
-    # Валидация названия
-    def clean_name(self):
-        name = self.cleaned_data.get('name', '')
-        for word in FORBIDDEN_WORDS:
-            if word in name.lower():
-                raise forms.ValidationError(f"Запрещено использовать слово '{word}' в названии продукта.")
-        return name
-
-    # Валидация описания
-    def clean_description(self):
-        description = self.cleaned_data.get('description', '')
-        for word in FORBIDDEN_WORDS:
-            if word in description.lower():
-                raise forms.ValidationError(f"Запрещено использовать слово '{word}' в описании продукта.")
-        return description
+from .forms import ProductForm, VersionForm
+from .models import Product, Version
 
 # Список продуктов
 class ProductListView(ListView):
@@ -45,20 +20,40 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_form.html'
-    success_url = reverse_lazy('catalog:home')  # Исправлено на 'catalog:home'
+    success_url = reverse_lazy('catalog:home')
 
 # Обновление продукта
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_form.html'
-    success_url = reverse_lazy('catalog:home')  # Исправлено на 'catalog:home'
+    success_url = reverse_lazy('catalog:home')
 
 # Удаление продукта
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:home')  # Исправлено на 'catalog:home'
+    success_url = reverse_lazy('catalog:home')
+
+# Создание версии продукта
+class VersionCreateView(CreateView):
+    model = Version
+    form_class = VersionForm
+    template_name = 'version_form.html'
+    success_url = reverse_lazy('catalog:home')
+
+# Обновление версии продукта
+class VersionUpdateView(UpdateView):
+    model = Version
+    form_class = VersionForm
+    template_name = 'version_form.html'
+    success_url = reverse_lazy('catalog:home')
+
+# Удаление версии продукта
+class VersionDeleteView(DeleteView):
+    model = Version
+    template_name = 'version_confirm_delete.html'
+    success_url = reverse_lazy('catalog:home')
 
 # О нас
 class AboutView(TemplateView):
