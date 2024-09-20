@@ -5,12 +5,16 @@
   <ul>
     {% for product in products %}
       <li>
-        <a href="{% url 'catalog:product_update' product.pk %}">{{ product.name }}</a>
+        <a href="{% url 'catalog:product_detail' product.pk %}">{{ product.name }}</a>
         {% if product.active_version %}
           <span> - Текущая версия: {{ product.active_version.version_name }} ({{ product.active_version.version_number }})</span>
+          <!-- Кнопка редактирования версии -->
+          <a href="{% url 'catalog:version_update' pk=product.active_version.pk %}">Редактировать версию</a>
         {% else %}
           <span> - Текущая версия отсутствует</span>
         {% endif %}
+        <!-- Кнопка создания новой версии -->
+        <a href="{% url 'catalog:version_create' product_id=product.pk %}">Добавить новую версию</a>
         <a href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
       </li>
     {% endfor %}
