@@ -72,6 +72,8 @@ class Product(models.Model):
     def current_version(self):
         return self.versions.filter(is_current=True).first()
 
+
+
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
