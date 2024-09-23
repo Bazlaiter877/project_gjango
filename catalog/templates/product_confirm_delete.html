@@ -1,6 +1,6 @@
 <h1>Удалить продукт "{{ product.name }}"?</h1>
-<form method="post">
+<form method="post" class="mb-3">
     {% csrf_token %}
-    <button type="submit">Да, удалить</button>
+    <button type="submit" class="btn btn-danger">Да, удалить</button>
 </form>
-<a href="{% url 'catalog:home' %}">Отмена</a>
+<a href="{% url 'catalog:home' %}" class="btn btn-secondary">Отмена</a>

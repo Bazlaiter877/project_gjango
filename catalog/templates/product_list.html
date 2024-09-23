@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>Продукты</h1>
-  <a href="{% url 'catalog:product_create' %}">Добавить новый продукт</a>
-  <ul>
+  <a href="{% url 'catalog:product_create' %}" class="btn btn-primary mb-3">Добавить новый продукт</a>
+  <ul class="list-group">
     {% for product in products %}
-      <li>
-        <a href="{% url 'catalog:product_detail' product.pk %}">{{ product.name }}</a>
-        {% if product.active_version %}
-          <span> - Текущая версия: {{ product.active_version.version_name }} ({{ product.active_version.version_number }})</span>
-          <!-- Кнопка редактирования версии -->
-          <a href="{% url 'catalog:version_update' pk=product.active_version.pk %}">Редактировать версию</a>
-        {% else %}
-          <span> - Текущая версия отсутствует</span>
-        {% endif %}
-        <!-- Кнопка создания новой версии -->
-        <a href="{% url 'catalog:version_create' product_id=product.pk %}">Добавить новую версию</a>
-        <a href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="{% url 'catalog:product_detail' product.pk %}" class="text-decoration-none">{{ product.name }}</a>
+        <div class="d-flex align-items-center">
+          {% if product.active_version %}
+            <span class="me-2"> - Текущая версия: {{ product.active_version.version_name }} ({{ product.active_version.version_number }})</span>
+            <a href="{% url 'catalog:version_update' pk=product.active_version.pk %}" class="btn btn-link">Редактировать версию</a>
+          {% else %}
+            <span class="me-2"> - Текущая версия отсутствует</span>
+          {% endif %}
+          <a href="{% url 'catalog:version_create' product_id=product.pk %}" class="btn btn-link">Добавить новую версию</a>
+          <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger ms-2">Удалить</a>
+        </div>
       </li>
     {% endfor %}
   </ul>

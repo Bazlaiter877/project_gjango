@@ -9,7 +9,6 @@ class Category(models.Model):
         verbose_name="Наименование",
         help_text="Введите наименование категории",
     )
-
     description = models.TextField(
         blank=True,
         null=True,
@@ -61,16 +60,17 @@ class Product(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Дата создания",
-        help_text="Дата создания записи в базе данных",
     )
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name="Дата последнего изменения",
-        help_text="Дата последнего изменения записи в базе данных",
     )
 
     def __str__(self):
         return self.name
+
+    def current_version(self):
+        return self.versions.filter(is_current=True).first()
 
     class Meta:
         verbose_name = "Продукт"
@@ -98,7 +98,7 @@ class BlogPost(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        super(BlogPost, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
@@ -113,7 +113,7 @@ class Version(models.Model):
     def save(self, *args, **kwargs):
         if self.is_current:
             Version.objects.filter(product=self.product, is_current=True).update(is_current=False)
-        super(Version, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.product.name} - {self.version_name} ({self.version_number})"

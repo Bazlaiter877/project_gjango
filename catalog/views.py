@@ -15,9 +15,13 @@ class ProductListView(ListView):
 # Детали продукта
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    versions = Version.objects.filter(product=product)
-    return render(request, 'product_detail.html', {'product': product, 'versions': versions})
-
+    current_version = product.current_version()
+    versions = product.versions.all()
+    return render(request, 'product_detail.html', {
+        'product': product,
+        'current_version': current_version,
+        'versions': versions,
+    })
 
 # Создание продукта
 class ProductCreateView(CreateView):

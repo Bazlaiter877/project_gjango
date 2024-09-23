@@ -1,7 +1,11 @@
-<h1>{{ form.instance.pk|yesno:"Редактировать продукт,Создать продукт" }}</h1>
-<form method="post" enctype="multipart/form-data">
+{% load crispy_forms_tags %}
+
+<h1>{% if form.instance.pk %}Редактировать продукт{% else %}Создать продукт{% endif %}</h1>
+<form method="post" enctype="multipart/form-data" class="form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+    <div class="form-group">
+        {{ form|crispy }}
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>
-<a href="{% url 'catalog:home' %}">Вернуться к списку продуктов</a>
+<a href="{% url 'catalog:home' %}" class="btn btn-secondary mt-2">Вернуться к списку продуктов</a>

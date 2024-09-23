@@ -3,18 +3,40 @@
 {% block content %}
     <h1>{{ product.name }}</h1>
 
-    <h2>Версии:</h2>
+    <h2>Текущая версия:</h2>
+    <ul>
+        {% if current_version %}
+            <li>
+                {{ current_version.version_name }} - {{ current_version.version_number }} <strong>(Текущая версия)</strong>
+                <a href="{% url 'catalog:version_update' pk=current_version.pk %}">Редактировать</a>
+                <a href="{% url 'catalog:version_delete' pk=current_version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+            </li>
+        {% else %}
+            <li>Текущая версия отсутствует.</li>
+        {% endif %}
+    </ul>
+
+    <h2>Другие версии:</h2>
     <ul>
         {% for version in versions %}
-            <li>
-                {{ version.version_name }} - {{ version.version_number }}
-                <a href="{% url 'catalog:version_update' pk=version.pk %}">Редактировать</a>
-                <a href="{% url 'catalog:version_delete' pk=version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
-            </li>
+            {% if not version.is_current %}
+                <li>
+                    {{ version.version_name }} - {{ version.version_number }}
+                    <a href="{% url 'catalog:version_update' pk=version.pk %}">Редактировать</a>
+                    <a href="{% url 'catalog:version_delete' pk=version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+                </li>
+            {% endif %}
         {% empty %}
             <li>Нет версий для отображения.</li>
         {% endfor %}
     </ul>
 
-    <a href="{% url 'catalog:version_create' product_id=product.pk %}">Добавить новую версию</a>
+    <h2>Добавить новую версию</h2>
+
+    <!-- Форма для добавления новой версии -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Отображаем форму для ввода версии -->
+        <button type="submit" class="btn btn-primary">Добавить версию</button>
+    </form>
 {% endblock %}
