@@ -1,11 +1,27 @@
-{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Создать продукт{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>{% block header %}Создать продукт{% endblock %}</h1>
 
-<h1>{% if form.instance.pk %}Редактировать продукт{% else %}Создать продукт{% endif %}</h1>
-<form method="post" enctype="multipart/form-data" class="form">
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form|crispy }}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary mt-3">Вернуться к списку продуктов</a>
     </div>
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
-<a href="{% url 'catalog:home' %}" class="btn btn-secondary mt-2">Вернуться к списку продуктов</a>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
