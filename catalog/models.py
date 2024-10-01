@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -65,26 +66,37 @@ class Product(models.Model):
         auto_now=True,
         verbose_name="Дата последнего изменения",
     )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name="Владелец",
+        help_text="Пользователь, создавший продукт",
+    )
 
     def __str__(self):
         return self.name
 
     def current_version(self):
+        """Возвращает текущую версию продукта."""
         return self.versions.filter(is_current=True).first()
-
-
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
 
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.CharField(max_length=255, unique=True, verbose_name="Slug")
     content = models.TextField(verbose_name="Содержимое")
-    preview_image = models.ImageField(upload_to='blog_previews/', blank=True, null=True, verbose_name="Превью")
+    preview_image = models.ImageField(
+        upload_to="blog_previews/",
+        blank=True,
+        null=True,
+        verbose_name="Превью",
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     is_published = models.BooleanField(default=False, verbose_name="Опубликовано")
     views_count = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
@@ -92,22 +104,27 @@ class BlogPost(models.Model):
     class Meta:
         verbose_name = "Блоговая запись"
         verbose_name_plural = "Блоговые записи"
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.slug or self.slug != slugify(self.title):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('blog:post_detail', kwargs={'slug': self.slug})
+        return reverse("blog:post_detail", kwargs={"slug": self.slug})
 
 
 class Version(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='versions', verbose_name="Продукт")
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="versions",
+        verbose_name="Продукт",
+    )
     version_number = models.CharField(max_length=10, verbose_name="Номер версии")
     version_name = models.CharField(max_length=255, verbose_name="Название версии")
     is_current = models.BooleanField(default=False, verbose_name="Текущая версия")

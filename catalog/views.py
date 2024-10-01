@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView, TemplateView
@@ -6,7 +7,7 @@ from .models import Product, Version
 
 
 # Список продуктов
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
@@ -24,15 +25,19 @@ def product_detail(request, pk):
     })
 
 # Создание продукта
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_form.html'
     success_url = reverse_lazy('catalog:product_list')
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 # Обновление продукта
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_form.html'
@@ -40,14 +45,14 @@ class ProductUpdateView(UpdateView):
 
 
 # Удаление продукта
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('catalog:product_list')
 
 
 # Создание версии продукта
-class VersionCreateView(CreateView):
+class VersionCreateView(LoginRequiredMixin, CreateView):
     model = Version
     form_class = VersionForm
     template_name = 'catalog/version_form.html'
@@ -64,7 +69,7 @@ class VersionCreateView(CreateView):
 
 
 # Обновление версии продукта
-class VersionUpdateView(UpdateView):
+class VersionUpdateView(LoginRequiredMixin, UpdateView):
     model = Version
     form_class = VersionForm
     template_name = 'catalog/version_form.html'
@@ -74,7 +79,7 @@ class VersionUpdateView(UpdateView):
 
 
 # Удаление версии продукта
-class VersionDeleteView(DeleteView):
+class VersionDeleteView(LoginRequiredMixin, DeleteView):
     model = Version
     template_name = 'catalog/version_confirm_delete.html'
 

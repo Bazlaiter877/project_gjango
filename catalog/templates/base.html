@@ -1,33 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Shop{% endblock %}</title>
+    <title>{% block title %}Мой Магазин{% endblock %}</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .navbar-nav .nav-link {
+            color: #333; /* Установите нужный цвет текста для навигации */
+        }
+        .footer-link {
+            color: #333; /* Установите нужный цвет текста для ссылок в подвале */
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a href="{% url 'catalog:home' %}" class="navbar-brand">My Shop</a>
+                <a href="{% url 'catalog:home' %}" class="navbar-brand">Мой Магазин</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a href="{% url 'catalog:home' %}" class="nav-link">Home</a>
+                            <a href="{% url 'catalog:home' %}" class="nav-link">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'catalog:about' %}" class="nav-link">About Us</a>
+                            <a href="{% url 'catalog:about' %}" class="nav-link">О нас</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'catalog:contacts' %}" class="nav-link">Contact</a>
+                            <a href="{% url 'catalog:contacts' %}" class="nav-link">Контакты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:login' %}" class="nav-link">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:register' %}" class="nav-link">Регистрация</a>
                         </li>
                     </ul>
                 </div>
@@ -43,17 +56,17 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-md-4 footer-section">
-                    <h4>About Us</h4>
-                    <p>Learn more about our company and our mission.</p>
-                    <a href="{% url 'catalog:about' %}" class="footer-link">Read more</a>
+                    <h4>О нас</h4>
+                    <p>Узнайте больше о нашей компании и нашей миссии.</p>
+                    <a href="{% url 'catalog:about' %}" class="footer-link">Читать далее</a>
                 </div>
                 <div class="col-md-4 footer-section">
-                    <h4>Contact Us</h4>
-                    <p>Have any questions? Get in touch with us.</p>
-                    <a href="{% url 'catalog:contacts' %}" class="footer-link">Contact</a>
+                    <h4>Свяжитесь с нами</h4>
+                    <p>Есть вопросы? Свяжитесь с нами.</p>
+                    <a href="{% url 'catalog:contacts' %}" class="footer-link">Контакт</a>
                 </div>
                 <div class="col-md-4 footer-section">
-                    <h4>Follow Us</h4>
+                    <h4>Следите за нами</h4>
                     <a href="#" class="footer-link">Facebook</a> |
                     <a href="#" class="footer-link">Twitter</a> |
                     <a href="#" class="footer-link">Instagram</a>
@@ -61,7 +74,7 @@
             </div>
         </div>
         <div class="footer-bottom text-center py-3 bg-secondary text-white">
-            <p>&copy; 2024 My Shop. All rights reserved.</p>
+            <p>&copy; 2024 Мой Магазин. Все права защищены.</p>
         </div>
     </footer>
 
