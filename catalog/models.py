@@ -74,6 +74,13 @@ class Product(models.Model):
         help_text="Пользователь, создавший продукт",
     )
 
+    # Новое поле для статуса публикации
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name="Опубликован",
+        help_text="Отметьте, если продукт опубликован"
+    )
+
     def __str__(self):
         return self.name
 
@@ -85,6 +92,13 @@ class Product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["-created_at"]
+
+        # Новые права доступа для модераторов
+        permissions = [
+            ("can_unpublish_product", "Может отменить публикацию продукта"),
+            ("can_edit_description", "Может изменять описание продукта"),
+            ("can_edit_category", "Может изменять категорию продукта"),
+        ]
 
 
 class BlogPost(models.Model):

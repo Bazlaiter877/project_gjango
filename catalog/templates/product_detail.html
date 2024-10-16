@@ -8,8 +8,10 @@
         {% if current_version %}
             <li>
                 {{ current_version.version_name }} - {{ current_version.version_number }} <strong>(Текущая версия)</strong>
-                <a href="{% url 'catalog:version_update' pk=current_version.pk %}">Редактировать</a>
-                <a href="{% url 'catalog:version_delete' pk=current_version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+                {% if product.owner == user %}
+                    <a href="{% url 'catalog:version_update' pk=current_version.pk %}">Редактировать</a>
+                    <a href="{% url 'catalog:version_delete' pk=current_version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+                {% endif %}
             </li>
         {% else %}
             <li>Текущая версия отсутствует.</li>
@@ -22,8 +24,10 @@
             {% if not version.is_current %}
                 <li>
                     {{ version.version_name }} - {{ version.version_number }}
-                    <a href="{% url 'catalog:version_update' pk=version.pk %}">Редактировать</a>
-                    <a href="{% url 'catalog:version_delete' pk=version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+                    {% if product.owner == user %}
+                        <a href="{% url 'catalog:version_update' pk=version.pk %}">Редактировать</a>
+                        <a href="{% url 'catalog:version_delete' pk=version.pk %}" onclick="return confirm('Вы уверены, что хотите удалить эту версию?');">Удалить</a>
+                    {% endif %}
                 </li>
             {% endif %}
         {% empty %}
@@ -31,12 +35,13 @@
         {% endfor %}
     </ul>
 
-    <h2>Добавить новую версию</h2>
-
-    <!-- Форма для добавления новой версии -->
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }} <!-- Отображаем форму для ввода версии -->
-        <button type="submit" class="btn btn-primary">Добавить версию</button>
-    </form>
+    {% if product.owner == user %}
+        <h2>Добавить новую версию</h2>
+        <!-- Форма для добавления новой версии -->
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }} <!-- Отображаем форму для ввода версии -->
+            <button type="submit" class="btn btn-primary">Добавить версию</button>
+        </form>
+    {% endif %}
 {% endblock %}
