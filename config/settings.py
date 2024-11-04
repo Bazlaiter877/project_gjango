@@ -1,15 +1,20 @@
 import os
+import environ
 from pathlib import Path
 
+# Базовая директория проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'ZQFjoVM492xnVDYCUrr4LBXS3OyTKv6PTeXPPsEt3e-FkECbL0US4x2BWO7YpI2qXYI'
+# Настройки django-environ
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
-DEBUG = True
-
+# Безопасные настройки
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 ALLOWED_HOSTS = []
 
+# Приложения
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,6 +29,7 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -34,8 +40,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# URL конфигурация
 ROOT_URLCONF = 'config.urls'
 
+# Настройки шаблонов
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -52,19 +60,22 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# База данных
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
+# Валидаторы паролей
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -72,31 +83,45 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Настройки кэша (Redis)
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': env('REDIS_URL'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Язык и часовой пояс
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+# Настройки статических файлов
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-AUTH_USER_MODEL = 'accounts.User'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'bazlaiter877@gmail.com'
-EMAIL_HOST_PASSWORD = 'zawk zylb mrys izyf'
-
+# Настройки медиа-файлов
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Модель пользователя
+AUTH_USER_MODEL = 'accounts.User'
+
+# Настройки электронной почты
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# Поле автоинкремента
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView, TemplateView
 from .forms import ProductForm, VersionForm
 from .models import Product, Version
+from .services import get_cached_categories
 
 
 # Список продуктов
@@ -116,3 +117,11 @@ class AboutView(TemplateView):
 # Контакты
 class ContactsView(TemplateView):
     template_name = 'contacts.html'
+
+
+class CategoryListView(ListView):
+    template_name = 'category_list.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        return get_cached_categories()
