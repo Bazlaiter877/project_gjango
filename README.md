@@ -20,7 +20,7 @@ bash
 Копировать код
 python3 -m venv venv
 source venv/bin/activate  # Linux и macOS
-# или для Windows
+или для Windows
 venv\Scripts\activate
 pip install -r requirements.txt
 
@@ -34,21 +34,21 @@ cp .env.example .env
 
 env
 Копировать код
-# Django
+Django
 SECRET_KEY=your_secret_key
 DEBUG=True
 
-# База данных
+База данных
 DB_NAME=your_db_name
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
 
-# Redis
+Redis
 REDIS_LOCATION=redis://127.0.0.1:6379/1
 
-# Email
+Email
 EMAIL_HOST_USER=your_email@example.com
 EMAIL_HOST_PASSWORD=your_email_password
 
